@@ -1,5 +1,5 @@
 from flask import jsonify, make_response
-from flask_restful import Resource, request,reqparse
+from flask_restful import Resource, request
 from ..models.models import User, DiaryEntry
 from ..models.fields import user_fields, diary_entry_fields, user_fields_types, diary_entry_types
 from ..api.Helpers import validate_and_assemble_data, assign_data
@@ -12,19 +12,27 @@ class UserResource(Resource):
 
     def post(self):
         data = request.get_json()
-        result=validate_and_assemble_data(data,user_fields,user_fields_types)
-        res_msg=result[2]
-        success_msg="user registered successfully. " + res_msg
+        result = validate_and_assemble_data(data, user_fields,
+                                            user_fields_types)
+        res_msg = result[2]
+        success_msg = "user registered successfully. " + res_msg
 
         if not result[0]:
-            return make_response(jsonify({"status":"fail","message":res_msg}),400)
+            return make_response(
+                jsonify({
+                    "status": "fail",
+                    "message": res_msg
+                }), 400)
 
-        _user=assign_data(User,result[1])
+        _user = assign_data(User, result[1])
 
         _user.save()
 
-        return make_response(jsonify({"status":"success","message":success_msg}),201)
-
+        return make_response(
+            jsonify({
+                "status": "success",
+                "message": success_msg
+            }), 201)
 
 
 class DiaryResource(Resource):
@@ -35,30 +43,72 @@ class DiaryResource(Resource):
             }), 200)
 
     def post(self):
-        data=request.get_json()
-        result=validate_and_assemble_data(data,diary_entry_fields,diary_entry_types)
-        res_msg=result[2]
-        success_msg= "new diary entry added"+res_msg
+        data = request.get_json()
+        result = validate_and_assemble_data(data, diary_entry_fields,
+                                            diary_entry_types)
+        res_msg = result[2]
+        success_msg = "new diary entry added. " + res_msg
 
         if not result[0]:
-            return make_response(jsonify({"status":"fail","message":res_msg}),400)
+            return make_response(
+                jsonify({
+                    "status": "fail",
+                    "message": res_msg
+                }), 400)
 
-        entry=assign_data(DiaryEntry,result[1])
+        entry = assign_data(DiaryEntry, result[1])
         entry.save()
-        return make_response(jsonify({"status":"success","message":success_msg,"data":entry.json()}),201)
+        return make_response(
+            jsonify({
+                "status": "success",
+                "message": success_msg
+            }), 201)
 
 
 class DiaryEditResource(Resource):
-    def get(self,entryId):
-        print(entryId)
-        f=open("test id.txt","w")
-        f.write(str(entryId))
-        f.close()
+    def get(self, entryId):
+        entry = DiaryEntry.get_single_entry(entryId)
+        if entry:
+            make_response(jsonify({"Diary Entry": entry}), 200)
+        else:
+            not_found_msg = "entry not found"
+            make_response(
+                jsonify({
+                    "status": "fail",
+                    "message": not_found_msg
+                }), 404)
+
+    def put(self, entryId):
+        data = request.get_json()
+        result = validate_and_assemble_data(data, diary_entry_fields,
+                                            diary_entry_types)
+        res_msg = result[2]
+        success_msg = f"diary entry with eid:{entryId} modified successfully. " + res_msg
+
+        if not result[0]:
+            return make_response(
+                jsonify({
+                    "status": "fail",
+                    "message": res_msg
+                }), 400)
+
+        entry = DiaryEntry.modify_entry(entryId, result[1][0], result[1][1])
+        if entry:
+            make_response(
+                jsonify({
+                    "status": "success",
+                    "message": success_msg
+                }), 201)
+        else:
+            not_found_msg = "entry not found"
+            make_response(
+                jsonify({
+                    "status": "fail",
+                    "message": not_found_msg
+                }), 404)
+
+    def delete(self,entryId):
+        entry=DiaryEntry.delete_entry(entryId)
+        if entry:
 
 
-
-    def put(self):
-        ...
-
-    def delete(self):
-        ...
