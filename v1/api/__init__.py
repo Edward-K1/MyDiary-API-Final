@@ -12,12 +12,11 @@ def create_app():
 
     api = Api(app, prefix=API_URL)
 
-    from v1.models import DiaryResource,DiaryEditResource,UserResource
+    from ..resources.resources import DiaryResource,DiaryEditResource,UserResource
 
     api.add_resource(DiaryResource, '/entry/')
-    api.add_resource(DiaryEditResource,'/entry/<EntryId')
+    api.add_resource(DiaryEditResource,'/entry/<entryId>')
     api.add_resource(UserResource,'/user/')
-
 
 
     return app

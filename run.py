@@ -1,4 +1,4 @@
-from ..v1.api import create_app
+from v1.api import create_app
 
 app=create_app()
 
