@@ -68,15 +68,14 @@ class DiaryResource(Resource):
 class DiaryEditResource(Resource):
     def get(self, entryId):
         entry = DiaryEntry.get_single_entry(entryId)
-        if entry:
-            make_response(jsonify({"Diary Entry": entry}), 200)
-        else:
-            not_found_msg = "entry not found"
-            make_response(
-                jsonify({
-                    "status": "fail",
-                    "message": not_found_msg
-                }), 404)
+
+        if not entry:
+            not_found_msg = f"entry with id:{entryId} not found"
+            return make_response(jsonify({"status": "fail","message": not_found_msg}),404)
+
+
+        return make_response(jsonify({"Diary Entry": entry}), 200)
+
 
     def put(self, entryId):
         data = request.get_json()
@@ -94,14 +93,14 @@ class DiaryEditResource(Resource):
 
         entry = DiaryEntry.modify_entry(entryId, result[1][0], result[1][1])
         if entry:
-            make_response(
+            return make_response(
                 jsonify({
                     "status": "success",
                     "message": success_msg
                 }), 201)
         else:
             not_found_msg = "entry not found"
-            make_response(
+            return make_response(
                 jsonify({
                     "status": "fail",
                     "message": not_found_msg
@@ -110,5 +109,8 @@ class DiaryEditResource(Resource):
     def delete(self,entryId):
         entry=DiaryEntry.delete_entry(entryId)
         if entry:
-
+            return make_response(jsonify({"status":"success","message":"entry deleted successfully"}),200)
+        else:
+            not_found_msg = f"entry with id:{entryId} not found"
+            return make_response(jsonify({"status": "fail","message":not_found_msg}),404)
 

@@ -14,9 +14,9 @@ def create_app():
 
     from ..resources.resources import DiaryResource,DiaryEditResource,UserResource
 
-    api.add_resource(DiaryResource, '/entry/')
-    api.add_resource(DiaryEditResource,'/entry/<entryId>')
-    api.add_resource(UserResource,'/user/')
+    api.add_resource(DiaryResource, '/entry','/entry/')
+    api.add_resource(DiaryEditResource,'/entry/<int:entryId>')
+    api.add_resource(UserResource,'/user','/user/')
 
 
     return app

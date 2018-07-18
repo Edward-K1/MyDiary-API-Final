@@ -90,11 +90,18 @@ class DiaryEntry(object):
     @staticmethod
     def get_single_entry(eid):
 
-        specific_entry = None
+        specific_entry = ''
+        f=open("debug id file.txt","w")
+        f.write(str(eid))
+
 
         for entry in entries_db:
             if entry.eid == eid:
                 specific_entry = entry.json()
+
+        f.write(str(specific_entry))
+        f.close()
+
         return specific_entry
 
     @staticmethod
