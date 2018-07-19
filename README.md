@@ -4,3 +4,7 @@
 
 # MyDiary-API
 This is an API to power MyDiary Front-End Pages
+
+##How to run the tests:
+
+ cd into API root i.e /MyDiary-API/ and run the following command on a terminal: pytest ./v1/tests or nosetests -v ./v1/tests
