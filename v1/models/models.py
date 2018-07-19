@@ -91,16 +91,11 @@ class DiaryEntry(object):
     def get_single_entry(eid):
 
         specific_entry = ''
-        f=open("debug id file.txt","w")
-        f.write(str(eid))
-
 
         for entry in entries_db:
             if entry.eid == eid:
                 specific_entry = entry.json()
 
-        f.write(str(specific_entry))
-        f.close()
 
         return specific_entry
 
@@ -114,7 +109,7 @@ class DiaryEntry(object):
         for x in entries_db:
             if x.eid == eid:
                 new_entry = DiaryEntry(title, content)
-                new_entry.eid = eid
+                new_entry.eid = x.eid
                 new_entry.date = x.date
                 entries_db.remove(x)
                 entries_db.append(new_entry)
