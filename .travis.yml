@@ -5,7 +5,7 @@ python:
 install:
   - pip install -r requirements.txt
 
-script: pytest test_api.py
+script: pytest ./v1/tests
 
 after_success:
   - coveralls
