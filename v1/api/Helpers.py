@@ -62,10 +62,10 @@ def validate_and_assemble_data(data: dict, fields: list, datatypes: list):
 def assign_data(cls, data: list):
     """
         This method returns class instances with their respective arguments
-        when <= 15
+        when <= 10
 
         """
-    # This unnecessary repetition was supposed to be handled by a single tuple
+    # This unnecessary repetition was supposed to be handled by a single tuple e.g cls(tuple(data))
     # which is valid in python 3 but for some reason, it was rejected when passed to the classes.
 
     length = len(data)

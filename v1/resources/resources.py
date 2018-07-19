@@ -96,7 +96,6 @@ class DiaryEditResource(Resource):
             not_found_msg = f"entry with id:{entryId} not found"
             return make_response(jsonify({"status": "fail","message": not_found_msg}), 404)
 
-        print(entry)
 
         return make_response(jsonify({"status": "success","message": success_msg}), 201)
 

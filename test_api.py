@@ -95,6 +95,26 @@ class DiaryTest(BaseTest):
         self.assertEqual(response.status_code, 201)
         self.assertIn("new diary entry added", data['message'])
 
+    def test_valid_diary_entry_is_registered_but_excess_fields_are_ignored(self):
+        response = self.client.post(
+            self.API_URL + "/entry",
+            data=self.excess_fields_entry,
+            content_type='application/json')
+        data = json.loads(response.data)
+        self.assertEqual(response.status_code, 201)
+        self.assertIn("excess fields were ignored",str(data))
+
+    def test_entry_with_missing_fields_returns_bad_request(self):
+        response = self.client.post(
+            self.API_URL + "/entry",
+            data=self.missing_fields_entry,
+            content_type='application/json')
+        data = json.loads(response.data)
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("The following fields were missing", data['message'])
+
+
+
     def test_get_all_diary_entries(self):
         self.client.post(
             self.API_URL + "/entry",
@@ -141,6 +161,20 @@ class DiaryTest(BaseTest):
         self.assertEqual(response.status_code, 201)
         self.assertIn("this is the new title", str(data))
         self.assertIn("and the content is different", str(data))
+
+    def test_diary_entry_modification_with_invalid_data_returns_bad_request(self):
+        response = self.client.put(
+            self.API_URL + "/entry/1",data=self.invalid_entry_1,
+            content_type='application/json')
+        self.assertEqual(response.status_code,400)
+
+
+    def test_diary_entry_modification_with_invalid_id_returns_not_found(self):
+        response = self.client.put(
+            self.API_URL + "/entry/1986",data=self.modified_sample_entry_1,
+            content_type='application/json')
+        self.assertEqual(response.status_code,404)
+
 
     def test_user_can_delete_entry(self):
         self.client.post(
