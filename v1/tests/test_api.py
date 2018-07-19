@@ -77,7 +77,6 @@ class UserTest(BaseTest):
             self.API_URL + "/user",
             data=self.invalid_user,
             content_type='application/json')
-        data = json.loads(response.data)
         self.assertEqual(response.status_code, 400)
 
 
@@ -134,7 +133,6 @@ class DiaryTest(BaseTest):
 
     def test_get_single_diary_entry(self):
         get_response = self.client.get(self.API_URL + "/entry/1")
-        data = json.loads(get_response.data)
         self.assertEqual(get_response.status_code, 200)
 
     def test_get_single_entry_with_invalid_id_returns_not_found(self):
@@ -146,7 +144,6 @@ class DiaryTest(BaseTest):
             self.API_URL + "/entry",
             data=self.invalid_entry_1,
             content_type='application/json')
-        data = json.loads(response.data)
         self.assertEqual(response.status_code, 400)
 
     def test_user_can_modify_entries(self):
