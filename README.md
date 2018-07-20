@@ -36,11 +36,13 @@ This is an API to power MyDiary Front-End Pages
 Locally:
 
 user: http://127.0.0.1:5000/api/v1/user
+
 entry: http://127.0.0.1:5000/api/v1/entry
 
 
 On Heroku:
 
 user: https://ek-mydiary-api.herokuapp.com/api/v1/user
+
 entry: https://ek-mydiary-api.herokuapp.com/api/v1/entry
 
