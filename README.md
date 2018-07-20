@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/Edward-K1/MyDiary-API.svg?branch=develop)](https://travis-ci.org/Edward-K1/MyDiary-API)
 [![Coverage Status](https://coveralls.io/repos/github/Edward-K1/MyDiary-API/badge.svg?branch=feature)](https://coveralls.io/github/Edward-K1/MyDiary-API?branch=feature)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/bcdc7f46a0df4609a99c7fccf0281ec0)](https://www.codacy.com/app/Edward-K1/MyDiary-API?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Edward-K1/MyDiary-API&amp;utm_campaign=Badge_Grade)
 [![Maintainability](https://api.codeclimate.com/v1/badges/5a4da4bfaef192469018/maintainability)](https://codeclimate.com/github/Edward-K1/MyDiary-API/maintainability)
