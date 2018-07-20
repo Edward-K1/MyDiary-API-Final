@@ -25,6 +25,17 @@ omit =
     */pydoc.py/*
     */decimal.py/*
     */env/*
+	*/flask_restful/*
+	*uuid.*
+	*decimal*
+	*numbers*
+	*itsdangerous*
+	*hmac.*
+	*mimetypes.*
+	*stringprep.*
+	
+	
+	
     
     
 
