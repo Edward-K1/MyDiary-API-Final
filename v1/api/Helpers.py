@@ -1,3 +1,8 @@
+"""
+This module handles the validation of data passed to the api and also assigns
+it to the respective classes
+
+"""
 import re
 
 

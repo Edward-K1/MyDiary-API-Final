@@ -1,6 +1,5 @@
+USER_FIELDS = ("firstname", "lastname", "username", "email", "password")
+DIARY_ENTRY_FIELDS = ("title", "content")
 
-user_fields=["firstname","lastname","username","email","password"]
-diary_entry_fields=["title","content"]
-
-user_fields_types=[str,str,str,"email",str]
-diary_entry_types=[str,str]
+USER_FIELDS_TYPES = (str, str, str, "email", str)
+DIARY_ENTRY_TYPES = (str, str)

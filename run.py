@@ -1,6 +1,7 @@
+""" This module runs the api """
 from v1.api import create_app
 
-app=create_app()
+APP = create_app()
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    APP.run(debug=True)
