@@ -2,7 +2,7 @@ from flask import jsonify, make_response
 from flask_restful import Resource, request
 from ..models.models import User, DiaryEntry
 from ..models.fields import user_fields, diary_entry_fields, user_fields_types, diary_entry_types
-from ..api.Helpers import validate_and_assemble_data, assign_data
+from ..Helpers import validate_and_assemble_data, assign_data
 
 
 class UserResource(Resource):
