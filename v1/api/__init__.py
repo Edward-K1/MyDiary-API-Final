@@ -13,7 +13,11 @@ def create_app():
 
     api = Api(app, prefix=API_URL)
 
-    from .resources import DiaryResource, DiaryEditResource, UserResource
+    from .resources import (DiaryResource, DiaryEditResource, UserResource,
+                            UserSignupResource, UserLoginResource)
+
+    api.add_resource(UserSignupResource,"/auth/signup","/auth/signup/")
+    api.add_resource(UserLoginResource,"/auth/login","/auth/login/")
 
     api.add_resource(DiaryResource, '/entry', '/entry/')
     api.add_resource(DiaryEditResource, '/entry/<int:entryId>')

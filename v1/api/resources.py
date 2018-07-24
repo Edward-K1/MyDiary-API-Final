@@ -6,6 +6,15 @@ from .models.fields import USER_FIELDS, DIARY_ENTRY_FIELDS, USER_FIELDS_TYPES, D
 from .Helpers import validate_and_assemble_data, assign_data
 
 
+class UserSignupResource(Resource):
+    def post(self):
+        ...
+
+
+class UserLoginResource(Resource):
+    def post(self):
+        ...
+
 class UserResource(Resource):
     """ This class handles request to the user's api route """
 
