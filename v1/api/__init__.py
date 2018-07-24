@@ -13,7 +13,7 @@ def create_app():
 
     api = Api(app, prefix=API_URL)
 
-    from .resources.resources import DiaryResource, DiaryEditResource, UserResource
+    from .resources import DiaryResource, DiaryEditResource, UserResource
 
     api.add_resource(DiaryResource, '/entry', '/entry/')
     api.add_resource(DiaryEditResource, '/entry/<int:entryId>')

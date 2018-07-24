@@ -1,13 +1,14 @@
 """ This module handles requests passed to the various api endpoints """
 from flask import jsonify, make_response
 from flask_restful import Resource, request
-from ..models.models import User, DiaryEntry
-from ..models.fields import USER_FIELDS, DIARY_ENTRY_FIELDS, USER_FIELDS_TYPES, DIARY_ENTRY_TYPES
-from ..Helpers import validate_and_assemble_data, assign_data
+from .models.models import User, DiaryEntry
+from .models.fields import USER_FIELDS, DIARY_ENTRY_FIELDS, USER_FIELDS_TYPES, DIARY_ENTRY_TYPES
+from .Helpers import validate_and_assemble_data, assign_data
 
 
 class UserResource(Resource):
     """ This class handles request to the user's api route """
+
     def get(self):
         return make_response(jsonify({"Users": User.get_all_users()}), 200)
 
@@ -72,11 +73,13 @@ class DiaryEditResource(Resource):
 
         if not entry:
             not_found_msg = f"entry with id:{entryId} not found"
-            return make_response(jsonify({"status": "fail","message": not_found_msg}),404)
-
+            return make_response(
+                jsonify({
+                    "status": "fail",
+                    "message": not_found_msg
+                }), 404)
 
         return make_response(jsonify({"Diary Entry": entry}), 200)
-
 
     def put(self, entryId):
         data = request.get_json()
@@ -95,18 +98,30 @@ class DiaryEditResource(Resource):
         entry = DiaryEntry.modify_entry(entryId, result[1][0], result[1][1])
         if not entry:
             not_found_msg = f"entry with id:{entryId} not found"
-            return make_response(jsonify({"status": "fail","message": not_found_msg}), 404)
+            return make_response(
+                jsonify({
+                    "status": "fail",
+                    "message": not_found_msg
+                }), 404)
 
+        return make_response(
+            jsonify({
+                "status": "success",
+                "message": success_msg
+            }), 201)
 
-        return make_response(jsonify({"status": "success","message": success_msg}), 201)
-
-
-
-    def delete(self,entryId):
-        entry=DiaryEntry.delete_entry(entryId)
+    def delete(self, entryId):
+        entry = DiaryEntry.delete_entry(entryId)
         if entry:
-            return make_response(jsonify({"status":"success","message":"entry deleted successfully"}),200)
+            return make_response(
+                jsonify({
+                    "status": "success",
+                    "message": "entry deleted successfully"
+                }), 200)
         else:
             not_found_msg = f"entry with id:{entryId} not found"
-            return make_response(jsonify({"status": "fail","message":not_found_msg}),404)
-
+            return make_response(
+                jsonify({
+                    "status": "fail",
+                    "message": not_found_msg
+                }), 404)
