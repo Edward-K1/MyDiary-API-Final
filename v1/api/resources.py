@@ -24,15 +24,12 @@ class UserSignupResource(Resource):
         _user = assign_data(User, result[1])
 
         user_id = _user.save()
-        print(user_id)
 
         if not user_id:
             return make_response(
                 jsonify({
-                    "status":
-                    "failed",
-                    "message":
-                    "a database error occured"
+                    "status": "failed",
+                    "message": "a database error occured"
                 }), 500)
 
         return make_response(
@@ -44,13 +41,25 @@ class UserSignupResource(Resource):
 
 class UserLoginResource(Resource):
     def post(self):
-        data=request.get_json()
+        data = request.get_json()
         if not "email" or not "password" in data:
-            return make_response(jsonify({"message":"email and password required"}),400)
+            return make_response(
+                jsonify({
+                    "message": "email and password required"
+                }), 400)
 
-        if str(data.get("email")).strip()=='' or str(data.get("password")).strip()=='':
-            return make_response(jsonify({"message":"email and password required"}),400)
+        if str(data.get("email")).strip() == '' or str(
+                data.get("password")).strip() == '':
+            return make_response(
+                jsonify({
+                    "message": "email and password required"
+                }), 400)
 
+        user_id = User.get_login_user(str(data.get('email')), str(data.get('password')))
+
+
+        if not user_id:
+            return make_response(jsonify({"status":"failed","message":"invalid login credencials"}),403)
 
 
 

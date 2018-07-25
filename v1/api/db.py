@@ -14,7 +14,6 @@ class DatabaseManager(object):
 
         try:
             conn = psycopg2.connect(self.connection_str)
-
         except psycopg2.DatabaseError as ex:
             print(ex.pgerror)
 
@@ -61,8 +60,9 @@ class DatabaseManager(object):
         Returns :boolean: indicating whether the credencials match those of any
         user.
         """
-        status = False
-        query = "SELECT username,email,password FROM users WHERE email='{}'"
+        uid = None
+
+        query = "SELECT uid,email,password FROM users WHERE email='{}'"
         query = query.format(email)
         result = None
 
@@ -76,11 +76,13 @@ class DatabaseManager(object):
 
             result = cur.fetchone()
             cur.close()
+
+            if check_password_hash(result[2], passw):
+                uid = result[0]
+
         except psycopg2.DatabaseError as ex:
             print(ex.pgerror)
         finally:
             conn.close()
 
-
-
-        return status
+        return uid

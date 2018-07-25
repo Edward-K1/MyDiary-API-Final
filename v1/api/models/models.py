@@ -34,9 +34,14 @@ class User(object):
                               self.__email, self.__password)
         if not user_id:
             return False
+
         self.uid = user_id
 
         return user_id
+
+    @staticmethod
+    def get_login_user(email, password):
+        return dbm.check_login_user(email, password)
 
     @property
     def uid(self):
