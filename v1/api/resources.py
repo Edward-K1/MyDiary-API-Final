@@ -8,20 +8,6 @@ from .Helpers import validate_and_assemble_data, assign_data
 
 class UserSignupResource(Resource):
     def post(self):
-        ...
-
-
-class UserLoginResource(Resource):
-    def post(self):
-        ...
-
-class UserResource(Resource):
-    """ This class handles request to the user's api route """
-
-    def get(self):
-        return make_response(jsonify({"Users": User.get_all_users()}), 200)
-
-    def post(self):
         data = request.get_json()
         result = validate_and_assemble_data(data, USER_FIELDS,
                                             USER_FIELDS_TYPES)
@@ -31,19 +17,42 @@ class UserResource(Resource):
         if not result[0]:
             return make_response(
                 jsonify({
-                    "status": "fail",
+                    "status": "failed",
                     "message": res_msg
                 }), 400)
 
         _user = assign_data(User, result[1])
 
-        _user.save()
+        user_id = _user.save()
+        print(user_id)
+
+        if not user_id:
+            return make_response(
+                jsonify({
+                    "status":
+                    "failed",
+                    "message":
+                    "a database error occured"
+                }), 500)
 
         return make_response(
             jsonify({
                 "status": "success",
                 "message": success_msg
             }), 201)
+
+
+class UserLoginResource(Resource):
+    def post(self):
+        data=request.get_json()
+        if not "email" or not "password" in data:
+            return make_response(jsonify({"message":"email and password required"}),400)
+
+        if str(data.get("email")).strip()=='' or str(data.get("password")).strip()=='':
+            return make_response(jsonify({"message":"email and password required"}),400)
+
+
+
 
 
 class DiaryResource(Resource):
