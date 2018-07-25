@@ -1,8 +1,6 @@
 from werkzeug.security import generate_password_hash
 from datetime import datetime
-
-users_db = []
-entries_db = []
+from ..db import DatabaseManager as dbm
 
 
 class User(object):
@@ -10,7 +8,7 @@ class User(object):
         """
         Creates a new instance of an api user
         """
-        self.__id = len(users_db) + 1
+        self.__uid = ''
         self.__firstname = firstname
         self.__lastname = lastname
         self.__username = username
@@ -23,7 +21,7 @@ class User(object):
         """
 
         return {
-            "id": self.__id,
+            "id": self.__uid,
             "firstname": self.__firstname,
             "lastname": self.__lastname,
             "username": self.__username,
@@ -32,10 +30,24 @@ class User(object):
         }
 
     def save(self):
-        users_db.append(self)
+        user_id = dbm.insert_user(self.__firstname, self.__lastname, self.__username,
+                              self.__email, self.__password)
+        if not user_id:
+            return False
+        self.uid = user_id
+
+        return user_id
+
+    @property
+    def uid(self):
+        return self.__uid
+
+    @uid.setter
+    def uid(self, uid):
+        self.__uid = uid
 
     @staticmethod
-    def get_all_users():
+    def get_user():
         return [x.json() for x in users_db]
 
 
@@ -44,7 +56,7 @@ class DiaryEntry(object):
         """
         Create a new instance of a diary entry
         """
-        self.__eid = len(entries_db) + 1
+        self.__eid = ''
         self.__title = title
         self.__content = content
         self.__date = str(datetime.now())[:19]
@@ -95,7 +107,6 @@ class DiaryEntry(object):
         for entry in entries_db:
             if entry.eid == eid:
                 specific_entry = entry.json()
-
 
         return specific_entry
 
