@@ -19,8 +19,8 @@ def create_app():
     api.add_resource(UserSignupResource,"/auth/signup","/auth/signup/")
     api.add_resource(UserLoginResource,"/auth/login","/auth/login/")
 
-    api.add_resource(DiaryResource, '/entry', '/entry/')
-    api.add_resource(DiaryEditResource, '/entry/<int:entryId>')
+    api.add_resource(DiaryResource, '/entries', '/entries/')
+    api.add_resource(DiaryEditResource, '/entries/<int:entryId>')
     #api.add_resource(NotificationsResource, '/notification','/notification/')
 
     return app

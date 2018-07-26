@@ -59,7 +59,7 @@ class UserLoginResource(Resource):
                     "message": res_msg
                 }), 400)
 
-        login_result = User.get_login_user(result[1][0],result[1][1])
+        login_result = User.get_login_user(result[1][0], result[1][1])
 
         if not login_result[0]:
             return make_response(
@@ -95,8 +95,9 @@ class DiaryResource(Resource):
     @token_required
     def post(user_id, self):
         data = request.get_json()
-        result = validate_and_assemble_data(data, DIARY_ENTRY_FIELDS,
-                                            DIARY_ENTRY_TYPES)
+        data["user_id"] = user_id
+        result = validate_and_assemble_data(
+            data, DIARY_ENTRY_FIELDS, DIARY_FIELDS_REGX, DIARY_ENTRIES_HELP)
         res_msg = result[2]
         success_msg = "new diary entry added. " + res_msg
 

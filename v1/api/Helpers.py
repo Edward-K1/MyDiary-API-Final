@@ -16,7 +16,7 @@ def validate_and_assemble_data(data, fields, regx_patterns, help_messages):
     3 -> message: a message indicating missing, invalid, or excess fields if any.
 
     It expects dictionary for data, a list for fields, a list for regx patterns
-    that are to be used during validation and list of help messages to who for
+    that are to be used during validation and list of help messages to show for
     each invalid field found
 
     """
