@@ -125,27 +125,20 @@ class DiaryEditResource(Resource):
         result = DiaryEntry.get_single_entry(entryId)
 
         if not result[0]:
-            if "no entry with selected id" in result[1]:
-                not_found_msg = f"entry with id:{entryId} not found"
-                return make_response(
-                    jsonify({
-                        "status": "fail",
-                        "message": not_found_msg
-                    }), 404)
 
-            else:
-                return make_response(
-                    jsonify({
-                        "status": "fail",
-                        "message": result[1]
-                    }), 500)
+            not_found_msg = f"entry with id:{entryId} not found"
+            return make_response(
+                jsonify({
+                    "status": "failed",
+                    "message": not_found_msg
+                }), 404)
 
         return make_response(jsonify({"Diary Entry": result[0]}), 200)
 
     @token_required
     def put(user_id, self, entryId):
         data = request.get_json()
-        data['user_id']=user_id
+        data['user_id'] = user_id
 
         result = validate_and_assemble_data(
             data, DIARY_ENTRY_FIELDS, DIARY_FIELDS_REGX, DIARY_ENTRIES_HELP)
@@ -162,6 +155,7 @@ class DiaryEditResource(Resource):
 
         edit_result = DiaryEntry.modify_entry(entryId, result[1][1],
                                               result[1][2])
+        print(edit_result)
 
         if not edit_result[0]:
             not_found_msg = f"entry with id:{entryId} not found"
@@ -182,20 +176,13 @@ class DiaryEditResource(Resource):
         result = DiaryEntry.delete_entry(entryId)
 
         if not result[0]:
-            if "no entry with selected id" in result[1]:
-                not_found_msg = f"entry with id:{entryId} not found"
-                return make_response(
-                    jsonify({
-                        "status": "fail",
-                        "message": not_found_msg
-                    }), 404)
 
-            else:
-                return make_response(
-                    jsonify({
-                        "status": "fail",
-                        "message": result[1]
-                    }), 500)
+            not_found_msg = f"entry with id:{entryId} not found"
+            return make_response(
+                jsonify({
+                    "status": "fail",
+                    "message": not_found_msg
+                }), 404)
 
         return make_response(
             jsonify({

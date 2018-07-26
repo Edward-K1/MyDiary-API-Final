@@ -164,6 +164,9 @@ class DatabaseManager(object):
             result = cur.fetchone()
             cur.close()
 
+            if not result:
+                error = "no entry with selected id found"
+
         except psycopg2.DatabaseError as ex:
             print(ex.pgerror)
             error = str(ex.pgerror)
@@ -179,12 +182,20 @@ class DatabaseManager(object):
         error = ''
 
         query = "UPDATE diary SET title='{}',content='{}' WHERE eid={}"
+        select = "SELECT * FROM diary WHERE eid={}".format(eid)
         query = query.format(title, content, eid)
+
         dbm = DatabaseManager()
         conn = dbm.connect_db()
 
         try:
             cur = conn.cursor()
+            cur.execute(select)
+            record = cur.fetchone()
+
+            if not record:
+                error = "no entry with selected id found"
+                return status, error
 
             cur.execute(query)
             cur.close()
@@ -204,13 +215,21 @@ class DatabaseManager(object):
         status = False
         error = ''
 
-        query = "DELETE FROM diary WHERE eid={}"
-        query = query.format(eid)
+        query = "DELETE FROM diary WHERE eid={}".format(eid)
+        select = "SELECT * FROM diary WHERE eid={}".format(eid)
+
         dbm = DatabaseManager()
         conn = dbm.connect_db()
 
         try:
             cur = conn.cursor()
+
+            cur.execute(select)
+            record = cur.fetchone()
+
+            if not record:
+                error = "no entry with selected id found"
+                return status, error
 
             cur.execute(query)
             cur.close()
