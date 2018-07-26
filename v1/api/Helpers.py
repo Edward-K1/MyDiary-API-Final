@@ -1,20 +1,24 @@
-"""
-This module handles the validation of data passed to the api and also assigns
-it to the respective classes
+""" This module contains functions that validate data according to
+ the specified fields and their regex validation patterns """
 
-"""
 import re
 
 
-def validate_and_assemble_data(data: dict, fields: list, datatypes: list):
+def validate_and_assemble_data(data, fields, regx_patterns, help_messages):
     """
     Returns a tuple with 3 values:
+
     1 -> Validity: Boolean indicating whether the data is valid according
     to the passed values
 
     2 -> assembled_data: a list of data arranged according to the fields passed
 
-    3 -> message: a message indicating missing or excess fields if any
+    3 -> message: a message indicating missing, invalid, or excess fields if any.
+
+    It expects dictionary for data, a list for fields, a list for regx patterns
+    that are to be used during validation and list of help messages to who for
+    each invalid field found
+
     """
     missing_fields = []
     excess_fields = []
@@ -35,18 +39,12 @@ def validate_and_assemble_data(data: dict, fields: list, datatypes: list):
         message = f"The following excess fields were ignored: {','.join(excess_fields)}"
 
     for count, field in enumerate(fields):
-        if field == 'email' or datatypes[count] == 'email':
 
-            email_regx = r"([\w\d]+[\.\w\d_]+@[\.\w\d_]+\.[\w]+)"
+        m = re.match(regx_patterns[count], str(data.get(field)))
 
-            m = re.match(email_regx, data.get("email"))
+        if not m:
+            invalid_fields.append(field)
 
-            if not m:
-                invalid_fields.append(field)
-        else:
-
-            if not isinstance(data.get(field), datatypes[count]):
-                invalid_fields.append(field)
 
         dt = data.get(field)
 
@@ -56,12 +54,33 @@ def validate_and_assemble_data(data: dict, fields: list, datatypes: list):
             invalid_fields.append(field)
 
     if invalid_fields:
-        message = f"The following fields had invalid data: {','.join(invalid_fields)}"
+        message = prepare_invalid_fields_help(fields,invalid_fields,help_messages)
         return (Validity, assembled_data, message)
 
     Validity = True
 
     return (Validity, assembled_data, message)
+
+
+
+def prepare_invalid_fields_help(fields,invalid_fields,fields_help):
+    """This function formats the invalid fields and returns them with their help"""
+    invalids_list={}
+
+    msg=f"The following fields had invalid data: {','.join(invalid_fields)}"
+
+    invalids_list["error"]=msg
+
+    help_messages=""
+
+    for count,field in enumerate(fields):
+        if field in invalid_fields:
+            help_messages+=field + " -> "+fields_help[count] + " "
+
+    invalids_list["help"]=help_messages
+
+
+    return invalids_list
 
 
 def assign_data(cls, data: list):

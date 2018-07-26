@@ -1,21 +1,24 @@
 """ This module handles requests passed to the various api endpoints """
 from flask import jsonify, make_response
 from flask_restful import Resource, request
-from .models.models import User, DiaryEntry
-from .models.fields import USER_FIELDS, DIARY_ENTRY_FIELDS, USER_FIELDS_TYPES, DIARY_ENTRY_TYPES
+import jwt
 from .Helpers import validate_and_assemble_data, assign_data
 from .security import token_required
 from . import create_app
-import jwt
+from .models.models import User, DiaryEntry
+from .models.fields import (USER_FIELDS, DIARY_ENTRY_FIELDS, LOGIN_FIELDS,
+                            USER_FIELDS_REGX, DIARY_FIELDS_REGX,
+                            LOGIN_FIELDS_REGX, USER_FIELDS_HELP,
+                            DIARY_ENTRIES_HELP, LOGIN_FIELDS_HELP)
 
 
 class UserSignupResource(Resource):
     def post(self):
         data = request.get_json()
         result = validate_and_assemble_data(data, USER_FIELDS,
-                                            USER_FIELDS_TYPES)
+                                            USER_FIELDS_REGX, USER_FIELDS_HELP)
         res_msg = result[2]
-        success_msg = "user registered successfully. " + res_msg
+        success_msg = "user registered successfully. " + str(res_msg)
 
         if not result[0]:
             return make_response(
@@ -45,30 +48,28 @@ class UserSignupResource(Resource):
 class UserLoginResource(Resource):
     def post(self):
         data = request.get_json()
-        if not "email" or not "password" in data:
-            return make_response(
-                jsonify({
-                    "message": "email and password required"
-                }), 400)
-
-        if str(data.get("email")).strip() == '' or str(
-                data.get("password")).strip() == '':
-            return make_response(
-                jsonify({
-                    "message": "email and password required"
-                }), 400)
-
-        result = User.get_login_user(
-            str(data.get('email')), str(data.get('password')))
+        result = validate_and_assemble_data(
+            data, LOGIN_FIELDS, LOGIN_FIELDS_REGX, LOGIN_FIELDS_HELP)
+        res_msg = result[2]
 
         if not result[0]:
             return make_response(
                 jsonify({
                     "status": "failed",
-                    "message": result[1]
+                    "message": res_msg
+                }), 400)
+
+        login_result = User.get_login_user(result[1][0],result[1][1])
+
+        if not login_result[0]:
+            return make_response(
+                jsonify({
+                    "status": "failed",
+                    "message": login_result[1]
                 }), 401)
 
-        user_id = result[0]
+        user_id = login_result[0]
+
         app = create_app()  #leverage app instance to get secret key
         encoded_token = jwt.encode({
             "user_id": user_id
