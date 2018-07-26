@@ -4,6 +4,9 @@ from flask_restful import Resource, request
 from .models.models import User, DiaryEntry
 from .models.fields import USER_FIELDS, DIARY_ENTRY_FIELDS, USER_FIELDS_TYPES, DIARY_ENTRY_TYPES
 from .Helpers import validate_and_assemble_data, assign_data
+from .security import token_required
+from . import create_app
+import jwt
 
 
 class UserSignupResource(Resource):
@@ -65,15 +68,23 @@ class UserLoginResource(Resource):
                     "message": result[1]
                 }), 401)
 
+        user_id = result[0]
+        app = create_app()  #leverage app instance to get secret key
+        encoded_token = jwt.encode({
+            "user_id": user_id
+        }, app.config['SECRET_KEY'])
+
 
 class DiaryResource(Resource):
-    def get(self):
+    @token_required
+    def get(user_id,self):
         return make_response(
             jsonify({
                 "Diary Entries": DiaryEntry.get_all_diary_entries()
             }), 200)
 
-    def post(self):
+    @token_required
+    def post(user_id,self):
         data = request.get_json()
         result = validate_and_assemble_data(data, DIARY_ENTRY_FIELDS,
                                             DIARY_ENTRY_TYPES)
@@ -97,7 +108,8 @@ class DiaryResource(Resource):
 
 
 class DiaryEditResource(Resource):
-    def get(self, entryId):
+    @token_required
+    def get(user_id,self, entryId):
         entry = DiaryEntry.get_single_entry(entryId)
 
         if not entry:
@@ -110,7 +122,8 @@ class DiaryEditResource(Resource):
 
         return make_response(jsonify({"Diary Entry": entry}), 200)
 
-    def put(self, entryId):
+    @token_required
+    def put(user_id,self, entryId):
         data = request.get_json()
         result = validate_and_assemble_data(data, DIARY_ENTRY_FIELDS,
                                             DIARY_ENTRY_TYPES)
@@ -139,7 +152,8 @@ class DiaryEditResource(Resource):
                 "message": success_msg
             }), 201)
 
-    def delete(self, entryId):
+    @token_required
+    def delete(user_id,self, entryId):
         entry = DiaryEntry.delete_entry(entryId)
         if entry:
             return make_response(
