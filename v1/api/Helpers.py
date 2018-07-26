@@ -4,6 +4,8 @@ it to the respective classes
 
 """
 import re
+import jwt
+from functools import wraps
 
 
 def validate_and_assemble_data(data: dict, fields: list, datatypes: list):
@@ -99,3 +101,22 @@ def assign_data(cls, data: list):
     elif length == 10:
         return cls(data[0], data[1], data[2], data[3], data[4], data[5],
                    data[6], data[7], data[8], data[9])
+
+def token_required(function):
+    @wraps(function)
+    def decorated(*args,**kwargs):
+        token = None
+        if 'x-access-token' in request.headers:
+            token = request.headers['access-token']
+        if not token:
+            return jsonify({"Error":"Token is missing"})
+
+        try:
+            data = jwt.decode(token,app.config['SECRET_KEY'])
+
+        except:
+            pass
+
+        return function(user_id,*args,**kwargs)
+
+    return decorated

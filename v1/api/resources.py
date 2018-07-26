@@ -23,13 +23,13 @@ class UserSignupResource(Resource):
 
         _user = assign_data(User, result[1])
 
-        user_id = _user.save()
+        result = _user.save()
 
-        if not user_id:
+        if not result[0]:
             return make_response(
                 jsonify({
                     "status": "failed",
-                    "message": "a database error occured"
+                    "message": result[1]
                 }), 500)
 
         return make_response(
@@ -55,13 +55,15 @@ class UserLoginResource(Resource):
                     "message": "email and password required"
                 }), 400)
 
-        user_id = User.get_login_user(str(data.get('email')), str(data.get('password')))
+        result = User.get_login_user(
+            str(data.get('email')), str(data.get('password')))
 
-
-        if not user_id:
-            return make_response(jsonify({"status":"failed","message":"invalid login credencials"}),403)
-
-
+        if not result[0]:
+            return make_response(
+                jsonify({
+                    "status": "failed",
+                    "message": result[1]
+                }), 401)
 
 
 class DiaryResource(Resource):
