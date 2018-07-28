@@ -40,11 +40,10 @@ def validate_and_assemble_data(data, fields, regx_patterns, help_messages):
 
     for count, field in enumerate(fields):
 
-        m = re.match(regx_patterns[count], str(data.get(field)))
+        match = re.match(regx_patterns[count], str(data.get(field)))
 
-        if not m:
+        if not match:
             invalid_fields.append(field)
-
 
         dt = data.get(field)
 
@@ -54,7 +53,8 @@ def validate_and_assemble_data(data, fields, regx_patterns, help_messages):
             invalid_fields.append(field)
 
     if invalid_fields:
-        message = prepare_invalid_fields_help(fields,invalid_fields,help_messages)
+        message = prepare_invalid_fields_help(fields, invalid_fields,
+                                              help_messages)
         return (Validity, assembled_data, message)
 
     Validity = True
@@ -62,23 +62,21 @@ def validate_and_assemble_data(data, fields, regx_patterns, help_messages):
     return (Validity, assembled_data, message)
 
 
-
-def prepare_invalid_fields_help(fields,invalid_fields,fields_help):
+def prepare_invalid_fields_help(fields, invalid_fields, fields_help):
     """This function formats the invalid fields and returns them with their help"""
-    invalids_list={}
+    invalids_list = {}
 
-    msg=f"The following fields had invalid data: {','.join(invalid_fields)}"
+    msg = f"The following fields had invalid data: {','.join(invalid_fields)}"
 
-    invalids_list["error"]=msg
+    invalids_list["error"] = msg
 
-    help_messages=""
+    help_messages = ""
 
-    for count,field in enumerate(fields):
+    for count, field in enumerate(fields):
         if field in invalid_fields:
-            help_messages+=field + " -> "+fields_help[count] + " "
+            help_messages += field + " -> " + fields_help[count] + " "
 
-    invalids_list["help"]=help_messages
-
+    invalids_list["help"] = help_messages
 
     return invalids_list
 
