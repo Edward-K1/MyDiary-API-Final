@@ -6,6 +6,7 @@ from werkzeug.security import check_password_hash
 
 
 class DatabaseManager(object):
+    """ Manages database operations for the API """
     def __init__(self):
         self.connection_str = "dbname='mydiary' user='postgres' password='postgres'"
 
@@ -57,8 +58,10 @@ class DatabaseManager(object):
         Checks the passed login credencials of a user and compares them with
         those in the database.
 
-        Returns :boolean: indicating whether the credencials match those of any
-        user.
+        Returns :tuple(user_id,error_msg)
+
+        When the credencials don't match, None will be returned in the place
+        of the user's id
         """
         uid = None
         error = ''

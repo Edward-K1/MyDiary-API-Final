@@ -32,6 +32,9 @@ class User(object):
 
 
 class DiaryEntry(object):
+
+    db_labels= ("eid","title","content","created")
+
     def __init__(self, uid, title, content):
         """
         Create a new instance of a diary entry
@@ -48,14 +51,33 @@ class DiaryEntry(object):
 
 
     @staticmethod
+    def jsonify_and_attach_labels(items:list):
+        return {
+        DiaryEntry.db_labels[0]:items[0],
+        DiaryEntry.db_labels[1]:items[1],
+        DiaryEntry.db_labels[2]:items[2],
+        DiaryEntry.db_labels[3]:items[3]
+        }
+
+
+    @staticmethod
     def get_all_diary_entries(uid):
         """ Fetch the diary entries of a particular user """
-        return dbm.get_diary_entries(uid)
+        result = dbm.get_diary_entries(uid)
+        jsonified_list=[]
+        print(result)
+        for entry in result[0]:
+            jsonified_list.append(DiaryEntry.jsonify_and_attach_labels(entry))
+
+        print(jsonified_list)
+        return jsonified_list
 
     @staticmethod
     def get_single_entry(eid):
         """ Fetch a specific diary entry based on its id """
-        return dbm.get_single_diary_entry(eid)
+        entry = dbm.get_single_diary_entry(eid)
+        jsonified = DiaryEntry.jsonify_and_attach_labels(entry[0])
+        return jsonified,entry[1]
 
     @staticmethod
     def modify_entry(eid, title, content):
