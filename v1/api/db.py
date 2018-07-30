@@ -1,12 +1,20 @@
 """ This class sets up the project's database, and commits data to
     to its respective table
+
+    Call create_tables() or drop_tables() to create or drop the database tables
+
 """
+
+###
+###### Note : Executing this file directly creates the required tables
+###
 import psycopg2
 from werkzeug.security import check_password_hash
 
 
 class DatabaseManager(object):
     """ Manages database operations for the API """
+
     def __init__(self):
         self.connection_str = "dbname='mydiary' user='postgres' password='postgres'"
 
@@ -81,8 +89,12 @@ class DatabaseManager(object):
             result = cur.fetchone()
             cur.close()
 
-            if check_password_hash(result[2], passw):
-                uid = result[0]
+            if result:
+
+                if check_password_hash(result[2], passw):
+                    uid = result[0]
+                else:
+                    error = 'invalid login credencials'
             else:
                 error = 'invalid login credencials'
 
@@ -93,6 +105,58 @@ class DatabaseManager(object):
             conn.close()
 
         return uid, error
+
+    @staticmethod
+    def check_username_exists(username):
+        status = False
+        error = ''
+        query = "select * from users where username='{}'".format(username)
+
+        dbm = DatabaseManager()
+        conn = dbm.connect_db()
+
+        try:
+            cur = conn.cursor()
+            cur.execute(query)
+            record = cur.fetchone()
+            if record:
+                status = True
+
+            cur.close()
+            conn.commit()
+        except psycopg2.DatabaseError as ex:
+            print(ex.pgerror)
+            error = str(ex.pgerror)
+        finally:
+            conn.close()
+
+        return status, error
+
+    @staticmethod
+    def check_email_exists(email):
+        status = False
+        error = ''
+        query = "select * from users where email='{}'".format(email)
+
+        dbm = DatabaseManager()
+        conn = dbm.connect_db()
+
+        try:
+            cur = conn.cursor()
+            cur.execute(query)
+            record = cur.fetchone()
+            if record:
+                status = True
+
+            cur.close()
+            conn.commit()
+        except psycopg2.DatabaseError as ex:
+            print(ex.pgerror)
+            error = str(ex.pgerror)
+        finally:
+            conn.close()
+
+        return status, error
 
     @staticmethod
     def insert_diary_entry(uid, title, content):
@@ -197,7 +261,13 @@ class DatabaseManager(object):
             record = cur.fetchone()
 
             if not record:
-                error = "no entry with selected id found"
+                error = 404
+                return status, error
+
+            from datetime import datetime
+
+            if not str(datetime.now())[9] == str(record[4])[9]:
+                error = 403
                 return status, error
 
             cur.execute(query)
@@ -245,3 +315,80 @@ class DatabaseManager(object):
             conn.close()
 
         return status, error
+
+    @staticmethod
+    def create_tables():
+        """ This method creates the tables in which the API stores data """
+
+        commands = ("""
+            CREATE TABLE IF NOT EXISTS users
+(
+    uid serial,
+    firstname varchar(30) NOT NULL,
+    lastname varchar(30) NOT NULL,
+    username varchar(30) NOT NULL UNIQUE,
+    email varchar(100) NOT NULL UNIQUE,
+    password varchar(160) NOT NULL,
+    PRIMARY KEY (uid)
+    );""", """CREATE TABLE IF NOT EXISTS diary
+(
+    eid serial,
+    uid integer NOT NULL,
+    title varchar(200) NOT NULL,
+    content text NOT NULL,
+    created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (eid),
+    FOREIGN KEY(uid) REFERENCES users(uid) ON UPDATE NO ACTION ON DELETE CASCADE
+); """, """CREATE TABLE IF NOT EXISTS notifications
+(
+    nid serial,
+    uid integer NOT NULL,
+    created date NOT NULL DEFAULT CURRENT_DATE,
+    frequency integer,
+    PRIMARY KEY (nid, uid),
+    FOREIGN KEY(uid) REFERENCES users(uid) ON UPDATE NO ACTION ON DELETE CASCADE
+); """)
+
+        dbm = DatabaseManager()
+        conn = dbm.connect_db()
+
+        try:
+            cur = conn.cursor()
+
+            for sql_command in commands:
+                cur.execute(sql_command)
+
+            cur.close()
+            conn.commit()
+
+        except Exception as ex:
+            print(ex)
+        finally:
+            conn.close()
+
+    @staticmethod
+    def drop_tables():
+        commands = ("DROP TABLE IF EXISTS notifications",
+                    "DROP TABLE IF EXISTS diary", "DROP TABLE IF EXISTS users")
+
+        dbm = DatabaseManager()
+        conn = dbm.connect_db()
+
+        try:
+            cur = conn.cursor()
+
+            for command in commands:
+                cur.execute(command)
+
+            cur.close()
+            conn.commit()
+
+        except Exception as ex:
+            print(ex)
+        finally:
+            conn.close()
+
+
+if __name__ == '__main__':
+   # DatabaseManager.drop_tables()
+    DatabaseManager.create_tables()
