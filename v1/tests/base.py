@@ -35,7 +35,7 @@ class BaseTest(unittest.TestCase):
             "content": "No, this is json."
         })
 
-        self.sample_user_1 = json.dumps({
+        self.valid_user = json.dumps({
             "firstname": "raphael",
             "lastname": "kato",
             "username": "rkat",
@@ -43,10 +43,29 @@ class BaseTest(unittest.TestCase):
             "password": "raphpass"
         })
 
-        self.invalid_user = json.dumps({
+        self.user_with_missing_fields = json.dumps({
+            "fir": "ronald",
+            "la": "kimera",
+            "user": "rkat",
+            "email": "patopha@gmail.com",
+            "password": "letthisbe"
+        })
+
+
+        self.user_with_invalid_data = json.dumps({
             "firstname": 1,
             "lastname": "peter",
             "username": "1peter",
             "email": "petermail",
             "password": "pass"
+        })
+
+        self.registered_user_credencials = json.dumps({
+            "email": "raphkat@gmail.com",
+            "password": "raphpass"
+        })
+
+        self.non_registered_user_credencials = json.dumps({
+            "email": "logme@wooly.com",
+            "password": "mypasswillpass"
         })
