@@ -6,14 +6,17 @@
 This is an API to power MyDiary Front-End Pages
 
 ## Technologies used:
-```Python 3
+```
+Python 3
 Flask
 Virtualenv
-Postgres ```
+Postgres
+
+```
 
 ## Getting Started:
 
-Clone the repo: ```git clone https://github.com/Edward-K1/MyDiary-API-Final.git```
+Clone the repo: `git clone https://github.com/Edward-K1/MyDiary-API-Final.git`
 
 
 
