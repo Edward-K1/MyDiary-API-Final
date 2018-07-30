@@ -31,7 +31,14 @@ class UserSignupResource(Resource):
 
         result = _user.save()
 
-        if not result[0]:
+        if result[1]:
+            if result[1] == 409:
+                return make_response(
+                    jsonify({
+                        "status": "failed",
+                        "message": result[0]
+                    }), 409)
+
             return make_response(
                 jsonify({
                     "status": "failed",
@@ -158,6 +165,15 @@ class DiaryEditResource(Resource):
         print(edit_result)
 
         if not edit_result[0]:
+            if edit_result[1] == 403:
+                return make_response(
+                    jsonify({
+                        "status":
+                        "failed",
+                        "message":
+                        "an entry can only be modified on the day it was created"
+                    }), 403)
+
             not_found_msg = f"entry with id:{entryId} not found"
             return make_response(
                 jsonify({
@@ -169,7 +185,7 @@ class DiaryEditResource(Resource):
             jsonify({
                 "status": "success",
                 "message": success_msg
-            }), 201)
+            }), 202)
 
     @token_required
     def delete(user_id, self, entryId):
@@ -189,3 +205,17 @@ class DiaryEditResource(Resource):
                 "status": "success",
                 "message": "entry deleted successfully"
             }), 200)
+
+
+class NotificationsResource(Resource):
+    @token_required
+    def get(self):
+        pass
+
+    @token_required
+    def post(self):
+        pass
+
+    @token_required
+    def delete(user_id, self):
+        pass

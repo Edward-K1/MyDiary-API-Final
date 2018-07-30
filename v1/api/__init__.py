@@ -14,13 +14,14 @@ def create_app():
     api = Api(app, prefix=API_URL)
 
     from .resources import (DiaryResource, DiaryEditResource,
-                            UserSignupResource, UserLoginResource)
+                            UserSignupResource, UserLoginResource,
+                            NotificationsResource)
 
-    api.add_resource(UserSignupResource,"/auth/signup","/auth/signup/")
-    api.add_resource(UserLoginResource,"/auth/login","/auth/login/")
+    api.add_resource(UserSignupResource, "/auth/signup", "/auth/signup/")
+    api.add_resource(UserLoginResource, "/auth/login", "/auth/login/")
 
     api.add_resource(DiaryResource, '/entries', '/entries/')
     api.add_resource(DiaryEditResource, '/entries/<int:entryId>')
-    #api.add_resource(NotificationsResource, '/notification','/notification/')
+    api.add_resource(NotificationsResource, '/notifications', '/notifications/')
 
     return app
