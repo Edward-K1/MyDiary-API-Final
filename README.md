@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/Edward-K1/MyDiary-API-Final.svg?branch=feature)](https://travis-ci.org/Edward-K1/MyDiary-API-Final)
+[![Maintainability](https://api.codeclimate.com/v1/badges/3ef3d6259e631d10a56a/maintainability)](https://codeclimate.com/github/Edward-K1/MyDiary-API-Final/maintainability)
 
 
 # MyDiary-API
