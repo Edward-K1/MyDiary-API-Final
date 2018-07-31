@@ -14,16 +14,15 @@ from werkzeug.security import check_password_hash
 
 class DatabaseManager(object):
     """ Manages database operations for the API """
+    connection_str = "dbname='mydiary' user='postgres' password='postgres'"
 
-    def __init__(self):
-        self.connection_str = "dbname='mydiary' user='postgres' password='postgres'"
-
-    def connect_db(self):
+    @staticmethod
+    def connect_db():
         """ Returns an active database connection to mydiary database """
         conn = None
 
         try:
-            conn = psycopg2.connect(self.connection_str)
+            conn = psycopg2.connect(DatabaseManager.connection_str)
         except psycopg2.DatabaseError as ex:
             print(ex.pgerror)
 
@@ -41,8 +40,7 @@ class DatabaseManager(object):
         insert_query = insert_query.format(fname, lname, uname, email,
                                            password)
 
-        dbm = DatabaseManager()
-        conn = dbm.connect_db()
+        conn = DatabaseManager.connect_db()
 
         try:
             cur = conn.cursor()
@@ -78,8 +76,7 @@ class DatabaseManager(object):
         query = query.format(email)
         result = None
 
-        dbm = DatabaseManager()
-        conn = dbm.connect_db()
+        conn = DatabaseManager.connect_db()
 
         try:
             cur = conn.cursor()
@@ -112,8 +109,7 @@ class DatabaseManager(object):
         error = ''
         query = "select * from users where username='{}'".format(username)
 
-        dbm = DatabaseManager()
-        conn = dbm.connect_db()
+        conn = DatabaseManager.connect_db()
 
         try:
             cur = conn.cursor()
@@ -138,8 +134,7 @@ class DatabaseManager(object):
         error = ''
         query = "select * from users where email='{}'".format(email)
 
-        dbm = DatabaseManager()
-        conn = dbm.connect_db()
+        conn = DatabaseManager.connect_db()
 
         try:
             cur = conn.cursor()
@@ -169,8 +164,7 @@ class DatabaseManager(object):
 
         insert_query = insert_query.format(uid, title, content)
 
-        dbm = DatabaseManager()
-        conn = dbm.connect_db()
+        conn = DatabaseManager.connect_db()
 
         try:
             cur = conn.cursor()
@@ -195,8 +189,7 @@ class DatabaseManager(object):
         result = None
         error = ''
 
-        dbm = DatabaseManager()
-        conn = dbm.connect_db()
+        conn = DatabaseManager.connect_db()
 
         try:
             cur = conn.cursor()
@@ -222,8 +215,7 @@ class DatabaseManager(object):
         result = None
         error = ''
 
-        dbm = DatabaseManager()
-        conn = dbm.connect_db()
+        conn = DatabaseManager.connect_db()
         try:
             cur = conn.cursor()
 
@@ -252,8 +244,7 @@ class DatabaseManager(object):
         select = "SELECT * FROM diary WHERE eid={}".format(eid)
         query = query.format(title, content, eid)
 
-        dbm = DatabaseManager()
-        conn = dbm.connect_db()
+        conn = DatabaseManager.connect_db()
 
         try:
             cur = conn.cursor()
@@ -291,8 +282,7 @@ class DatabaseManager(object):
         query = "DELETE FROM diary WHERE eid={}".format(eid)
         select = "SELECT * FROM diary WHERE eid={}".format(eid)
 
-        dbm = DatabaseManager()
-        conn = dbm.connect_db()
+        conn = DatabaseManager.connect_db()
 
         try:
             cur = conn.cursor()
@@ -349,8 +339,7 @@ class DatabaseManager(object):
     FOREIGN KEY(uid) REFERENCES users(uid) ON UPDATE NO ACTION ON DELETE CASCADE
 ); """)
 
-        dbm = DatabaseManager()
-        conn = dbm.connect_db()
+        conn = DatabaseManager.connect_db()
 
         try:
             cur = conn.cursor()
