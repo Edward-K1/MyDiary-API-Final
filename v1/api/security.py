@@ -11,7 +11,7 @@ def token_required(function):
         if 'access-token' in request.headers:
             token = request.headers['access-token']
         if not token:
-            return make_response(jsonify({"Error": "Token is missing"}), 401)
+            return make_response(jsonify({"Error": "Token is missing"}), 403)
 
         try:
             app = create_app()  # We need that secret key
@@ -20,7 +20,7 @@ def token_required(function):
             user_id = data['user_id']
 
         except:
-            return make_response(jsonify({"Error": "Token is invalid"}), 401)
+            return make_response(jsonify({"Error": "Token is invalid"}), 403)
 
         return function(user_id, *args, **kwargs)
 
