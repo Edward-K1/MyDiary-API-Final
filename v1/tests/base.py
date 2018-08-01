@@ -1,6 +1,7 @@
 import unittest
 import json
 from ..api import create_app, API_URL
+from ..api.db import DatabaseManager
 
 
 class BaseTest(unittest.TestCase):
@@ -8,6 +9,7 @@ class BaseTest(unittest.TestCase):
         app = create_app()
         self.client = app.test_client()
         self.API_URL = API_URL
+        DatabaseManager.create_tables()
 
         self.sample_entry_1 = json.dumps({
             "title": "this is my first title",
@@ -53,7 +55,7 @@ class BaseTest(unittest.TestCase):
 
 
         self.user_with_invalid_data = json.dumps({
-            "firstname": 1,
+            "firstname": "1",
             "lastname": "peter",
             "username": "1peter",
             "email": "petermail",
@@ -69,3 +71,7 @@ class BaseTest(unittest.TestCase):
             "email": "logme@wooly.com",
             "password": "mypasswillpass"
         })
+
+    def tearDown(self):
+        DatabaseManager.drop_tables()
+
