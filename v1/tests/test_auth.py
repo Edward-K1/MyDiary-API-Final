@@ -29,8 +29,11 @@ class AuthTest(BaseTest):
 
     def test_user_signup_with_invalid_data_returns_bad_request(self):
         response = self.client.post(
-            self.API_URL + "/user",
+            self.API_URL + "/auth/signup",
             data=self.user_with_invalid_data,
             content_type='application/json')
+
+        data=json.loads(response.data)
+        print(data)
 
         self.assertEqual(response.status_code, 400)
