@@ -7,7 +7,6 @@ class User(object):
         """
         Creates a new instance of an api user
         """
-        self.__uid = ''
         self.__firstname = firstname
         self.__lastname = lastname
         self.__username = username
@@ -41,6 +40,7 @@ class User(object):
 
 
 class DiaryEntry(object):
+    """ Create a new instance of a diary entry """
 
     db_labels = ("eid", "title", "content", "created")
 
