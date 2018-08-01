@@ -14,7 +14,7 @@ from werkzeug.security import check_password_hash
 
 class DatabaseManager(object):
     """ Manages database operations for the API """
-    connection_str = "dbname='mydiary' user='postgres' password='postgres'"
+    connection_str = "dbname='mydiary_test' user='postgres' password='postgres'"
 
     @staticmethod
     def connect_db():
