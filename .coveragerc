@@ -25,7 +25,8 @@ omit =
     */pydoc.py/*
     */decimal.py/*
     */env/*
-	*/flask_restful/*
+    */flask_restful/*
+	*/psycopg2/*
 	*uuid.*
 	*decimal*
 	*numbers*
@@ -33,9 +34,11 @@ omit =
 	*hmac.*
 	*mimetypes.*
 	*stringprep.*
-	
-	
-	
-    
-    
+    *six.*
+    *typing.*
+
+
+
+
+
 

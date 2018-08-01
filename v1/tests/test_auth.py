@@ -34,6 +34,33 @@ class AuthTest(BaseTest):
             content_type='application/json')
 
         data=json.loads(response.data)
-        print(data)
 
         self.assertEqual(response.status_code, 400)
+
+    def test_registered_user_login(self):
+         self.client.post(
+            self.API_URL + "/auth/signup",
+            data=self.valid_user,
+            content_type='application/json')
+
+         login_response = self.client.post(
+            self.API_URL + "/auth/login",
+            data=self.registered_user_credencials,
+            content_type='application/json')
+
+         data = json.loads(login_response.data)
+         self.assertEqual(login_response.status_code,200)
+         self.assertIn("access-token",str(data))
+
+    def test_non_registered_user_login(self):
+        login_response = self.client.post(
+            self.API_URL + "/auth/login",
+            data=self.registered_user_credencials,
+            content_type='application/json')
+
+        data=json.loads(login_response.data)
+        self.assertEqual(login_response.status_code,401)
+
+
+
+
