@@ -15,7 +15,7 @@ import os
 
 class DatabaseManager(object):
     """ Manages database operations for the API """
-    default_str = "" #"dbname='mydiary' user='postgres' password='postgres'"
+    default_str = "dbname='mydiary' user='postgres' password='postgres'"
     connection_str = os.environ.get('DATABASE_URL',default_str)
 
     @staticmethod
