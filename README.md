@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/Edward-K1/MyDiary-API-Final.svg?branch=feature)](https://travis-ci.org/Edward-K1/MyDiary-API-Final)
-[![Coverage Status](https://coveralls.io/repos/github/Edward-K1/MyDiary-API-Final/badge.svg)](https://coveralls.io/github/Edward-K1/MyDiary-API-Final)
+[![Coverage Status](https://coveralls.io/repos/github/Edward-K1/MyDiary-API-Final/badge.svg?branch=feature)](https://coveralls.io/github/Edward-K1/MyDiary-API-Final?branch=feature)
 [![Maintainability](https://api.codeclimate.com/v1/badges/3ef3d6259e631d10a56a/maintainability)](https://codeclimate.com/github/Edward-K1/MyDiary-API-Final/maintainability)
 
 
