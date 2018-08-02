@@ -15,15 +15,42 @@ This is an API to power MyDiary Front-End Pages
 
 ## Getting Started:
 
+Ensure the applications above are installed on your machine.
+
 Clone the repo: `git clone https://github.com/Edward-K1/MyDiary-API-Final.git`
 
+Create a virtual environment: `virtualenv venv`
 
+Activate your virtual environment and install requirements:
 
-## How to run the tests:
+(I'm assuming you're on windows)
 
- cd into API root directory, i.e /MyDiary-API/
+```
+$ cd venv/scripts
+$ activate
+$ cd ../..
 
- run the following command on a terminal: pytest ./v1/tests or: nosetests -v ./v1/tests
+$ pip install -r requirements.txt
+
+```
 
 
 ## Features
+
+The following endpoint are available:
+
+|Http Method | Endpoint |  Functionality|
+|........... | ........ |  .............|
+| POST   | /api/v1/auth/signup      |  Registers a new user|
+| POST   | /api/v1/auth/login       |  Logins a new user|
+| POST   | /api/v1/entries          |  Registers a new diary entry|
+| GET    | /api/v1/entries          |  Fetches a user's diary entries|
+| GET    | /api/v1/entries/<entryId> | Gets a specific diary entry|
+| PUT    | /api/v1/entries/<entryId> | Modifies a diary entry|
+| DELETE | /api/v1/entries/<entryId> | Deletes a diary entry|
+
+The API can be accessed on via the following URLs:
+
+* Locally: http://localhost:5000
+
+* On Heroku: https://ch3-api.herokuapp.com
