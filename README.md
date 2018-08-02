@@ -40,7 +40,7 @@ $ pip install -r requirements.txt
 The following endpoint are available:
 
 |Http Method | Endpoint |  Functionality|
-|........... | ........ |  .............|
+|------------- | :-------------: |  -------------|
 | POST   | /api/v1/auth/signup      |  Registers a new user|
 | POST   | /api/v1/auth/login       |  Logins a new user|
 | POST   | /api/v1/entries          |  Registers a new diary entry|
