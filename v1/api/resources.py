@@ -66,7 +66,9 @@ class UserLoginResource(Resource):
                     "message": res_msg
                 }), 400)
 
-        login_result = User.get_login_user(result[1][0], result[1][1])
+        user = User()
+
+        login_result = user.get_login_user(result[1][0], result[1][1])
 
         if not login_result[0]:
             return make_response(

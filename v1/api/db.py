@@ -8,28 +8,29 @@
 ###
 ###### Note : Executing this file directly creates the required tables
 ###
+import os
 import psycopg2
 from werkzeug.security import check_password_hash
 
 
 class DatabaseManager(object):
     """ Manages database operations for the API """
-    connection_str = "dbname='mydiary_test' user='postgres' password='postgres'"
+    def __init__(self):
 
-    @staticmethod
-    def connect_db():
+        self.connection_str = os.environ.get("DATABASE_URL")
+
+    def connect_db(self):
         """ Returns an active database connection to mydiary database """
         conn = None
 
         try:
-            conn = psycopg2.connect(DatabaseManager.connection_str)
+            conn = psycopg2.connect(self.connection_str)
         except psycopg2.DatabaseError as ex:
             print(ex.pgerror)
 
         return conn
 
-    @staticmethod
-    def insert_user(fname, lname, uname, email, password):
+    def insert_user(self, fname, lname, uname, email, password):
         """ Inserts new user into database """
         result = ''
         error = ''
@@ -40,7 +41,7 @@ class DatabaseManager(object):
         insert_query = insert_query.format(fname, lname, uname, email,
                                            password)
 
-        conn = DatabaseManager.connect_db()
+        conn = self.connect_db()
 
         try:
             cur = conn.cursor()
@@ -58,8 +59,7 @@ class DatabaseManager(object):
 
         return result, error
 
-    @staticmethod
-    def check_login_user(email, passw):
+    def check_login_user(self, email, passw):
         """
         Checks the passed login credencials of a user and compares them with
         those in the database.
@@ -76,7 +76,7 @@ class DatabaseManager(object):
         query = query.format(email)
         result = None
 
-        conn = DatabaseManager.connect_db()
+        conn = self.connect_db()
 
         try:
             cur = conn.cursor()
@@ -99,17 +99,17 @@ class DatabaseManager(object):
             print(ex.pgerror)
             error = str(ex.pgerror)
         finally:
-            conn.close()
+            if conn:
+                conn.close()
 
         return uid, error
 
-    @staticmethod
-    def check_username_exists(username):
+    def check_username_exists(self, username):
         status = False
         error = ''
         query = "select * from users where username='{}'".format(username)
 
-        conn = DatabaseManager.connect_db()
+        conn = self.connect_db()
 
         try:
             cur = conn.cursor()
@@ -128,13 +128,12 @@ class DatabaseManager(object):
 
         return status, error
 
-    @staticmethod
-    def check_email_exists(email):
+    def check_email_exists(self, email):
         status = False
         error = ''
         query = "select * from users where email='{}'".format(email)
 
-        conn = DatabaseManager.connect_db()
+        conn = self.connect_db()
 
         try:
             cur = conn.cursor()
@@ -153,8 +152,7 @@ class DatabaseManager(object):
 
         return status, error
 
-    @staticmethod
-    def insert_diary_entry(uid, title, content):
+    def insert_diary_entry(self, uid, title, content):
         """ Inserts new diary entry into database """
         status = False
         error = ''
@@ -164,7 +162,7 @@ class DatabaseManager(object):
 
         insert_query = insert_query.format(uid, title, content)
 
-        conn = DatabaseManager.connect_db()
+        conn = self.connect_db()
 
         try:
             cur = conn.cursor()
@@ -181,15 +179,14 @@ class DatabaseManager(object):
 
         return status, error
 
-    @staticmethod
-    def get_diary_entries(uid):
+    def get_diary_entries(self, uid):
         """ Get all diary entries for a particular user """
         query = "SELECT eid,title,content,created FROM diary WHERE uid='{}'"
         query = query.format(uid)
         result = None
         error = ''
 
-        conn = DatabaseManager.connect_db()
+        conn = self.connect_db()
 
         try:
             cur = conn.cursor()
@@ -207,15 +204,14 @@ class DatabaseManager(object):
 
         return result, error
 
-    @staticmethod
-    def get_single_diary_entry(eid):
+    def get_single_diary_entry(self, eid):
         """ Fetches a single diary entry based on its eid """
         query = "SELECT eid,title,content,created FROM diary WHERE eid='{}'"
         query = query.format(eid)
         result = None
         error = ''
 
-        conn = DatabaseManager.connect_db()
+        conn = self.connect_db()
         try:
             cur = conn.cursor()
 
@@ -234,8 +230,7 @@ class DatabaseManager(object):
 
         return result, error
 
-    @staticmethod
-    def update_diary_entry(eid, title, content):
+    def update_diary_entry(self, eid, title, content):
         """ Update a diary entry based on its eid """
         status = False
         error = ''
@@ -244,7 +239,7 @@ class DatabaseManager(object):
         select = "SELECT * FROM diary WHERE eid={}".format(eid)
         query = query.format(title, content, eid)
 
-        conn = DatabaseManager.connect_db()
+        conn = self.connect_db()
 
         try:
             cur = conn.cursor()
@@ -273,8 +268,7 @@ class DatabaseManager(object):
 
         return status, error
 
-    @staticmethod
-    def delete_diary_entry(eid):
+    def delete_diary_entry(self, eid):
         """ Deletes a diary entry """
         status = False
         error = ''
@@ -282,7 +276,7 @@ class DatabaseManager(object):
         query = "DELETE FROM diary WHERE eid={}".format(eid)
         select = "SELECT * FROM diary WHERE eid={}".format(eid)
 
-        conn = DatabaseManager.connect_db()
+        conn = self.connect_db()
 
         try:
             cur = conn.cursor()
@@ -379,5 +373,5 @@ class DatabaseManager(object):
 
 
 if __name__ == '__main__':
-   # DatabaseManager.drop_tables()
+    # DatabaseManager.drop_tables()
     DatabaseManager.create_tables()
