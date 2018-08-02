@@ -10,11 +10,13 @@
 ###
 import psycopg2
 from werkzeug.security import check_password_hash
+import os
 
 
 class DatabaseManager(object):
     """ Manages database operations for the API """
-    connection_str = "dbname='mydiary_test' user='postgres' password='postgres'"
+    default_str = "" #"dbname='mydiary' user='postgres' password='postgres'"
+    connection_str = os.environ.get('DATABASE_URL',default_str)
 
     @staticmethod
     def connect_db():
