@@ -49,10 +49,11 @@ class DiaryEntry(DatabaseManager):
 
     db_labels = ("eid", "title", "content", "created")
 
-    def __init__(self, uid, title, content):
+    def __init__(self, uid='', title='', content=''):
         """
         Create a new instance of a diary entry
         """
+        DatabaseManager.__init__(self)
         self.__uid = uid
         self.__title = title
         self.__content = content
