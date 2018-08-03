@@ -6,9 +6,11 @@ from ..api.db import DatabaseManager
 
 class BaseTest(unittest.TestCase):
     def setUp(self):
+        DatabaseManager.drop_tables()
         app = create_app()
         self.client = app.test_client()
         self.API_URL = API_URL
+
         DatabaseManager.create_tables()
 
         self.sample_entry_1 = json.dumps({
@@ -71,6 +73,25 @@ class BaseTest(unittest.TestCase):
             "email": "logme@wooly.com",
             "password": "mypasswillpass"
         })
+
+    def mock_login(self):
+        self.client.post(
+            self.API_URL + "/auth/signup",
+            data=self.valid_user,
+            content_type='application/json')
+
+        login_response = self.client.post(
+            self.API_URL + "/auth/login",
+            data=self.registered_user_credencials,
+            content_type='application/json')
+
+        data = json.loads(login_response.data)
+
+        return data
+
+    def create_headers(self,token):
+        return {'Content-Type':'application/json','access-token':token}
+
 
     def tearDown(self):
         DatabaseManager.drop_tables()
