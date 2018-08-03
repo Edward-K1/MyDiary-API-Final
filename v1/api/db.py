@@ -15,9 +15,10 @@ from werkzeug.security import check_password_hash
 
 class DatabaseManager(object):
     """ Manages database operations for the API """
+    default_str = "dbname='mydiary' user='postgres' password='postgres'"
     def __init__(self):
 
-        self.connection_str = os.environ.get("DATABASE_URL")
+        self.connection_str = os.environ.get("DATABASE_URL",self.default_str)
 
     def connect_db(self):
         """ Returns an active database connection to mydiary database """
