@@ -334,7 +334,8 @@ class DatabaseManager(object):
     FOREIGN KEY(uid) REFERENCES users(uid) ON UPDATE NO ACTION ON DELETE CASCADE
 ); """)
 
-        conn = DatabaseManager.connect_db()
+        db=DatabaseManager()
+        conn=db.connect_db()
 
         try:
             cur = conn.cursor()
@@ -355,8 +356,8 @@ class DatabaseManager(object):
         commands = ("DROP TABLE IF EXISTS notifications",
                     "DROP TABLE IF EXISTS diary", "DROP TABLE IF EXISTS users")
 
-        dbm = DatabaseManager()
-        conn = dbm.connect_db()
+        db=DatabaseManager()
+        conn=db.connect_db()
 
         try:
             cur = conn.cursor()

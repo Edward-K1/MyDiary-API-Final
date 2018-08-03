@@ -96,9 +96,10 @@ class UserLoginResource(Resource):
 class DiaryResource(Resource):
     @token_required
     def get(user_id, self):
+        entry=DiaryEntry()
         return make_response(
             jsonify({
-                "Diary Entries": DiaryEntry.get_all_diary_entries(user_id)
+                "Diary Entries": entry.get_all_diary_entries(user_id)
             }), 200)
 
     @token_required
@@ -131,7 +132,8 @@ class DiaryResource(Resource):
 class DiaryEditResource(Resource):
     @token_required
     def get(user_id, self, entryId):
-        result = DiaryEntry.get_single_entry(entryId)
+        entry=DiaryEntry()
+        result = entry.get_single_entry(entryId)
 
         if not result[0]:
 
@@ -162,9 +164,11 @@ class DiaryEditResource(Resource):
                     "message": res_msg
                 }), 400)
 
-        edit_result = DiaryEntry.modify_entry(entryId, result[1][1],
+
+        entry=DiaryEntry()
+
+        edit_result = entry.modify_entry(entryId, result[1][1],
                                               result[1][2])
-        print(edit_result)
 
         if not edit_result[0]:
             if edit_result[1] == 403:
@@ -191,7 +195,8 @@ class DiaryEditResource(Resource):
 
     @token_required
     def delete(user_id, self, entryId):
-        result = DiaryEntry.delete_entry(entryId)
+        entry=DiaryEntry()
+        result = entry.delete_entry(entryId)
 
         if not result[0]:
 
