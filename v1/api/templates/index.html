@@ -6,19 +6,31 @@
 <title>My Diary - API Home</title>
 
 <style type="text/css">
+
+  #container{
+    border-radius: 7px 7px 7px 7px;
+    background: #ff0000;
+
+  }
   #heading,#body{
 
-    color: #f00;
+    color: #fff;
     text-align: center;
     border-radius: 7px 7px 7px 7px;
     height: 60px;
     position: relative;
   }
 
+  #heading{
+
+
+  }
+
   #body{
-    color: #fff;
-    background: #ff0000;
+    color: #f00;
     height: 80px;
+    background: #fff;
+    border: 2px solid #f00;
   }
 
   #heading-text{
@@ -33,15 +45,18 @@
 </head>
 
 <body>
-  <div id="heading">
 
-    <span id="heading-text">Welcome to MyDiary API</span>
+  <div id="container">
+    <div id="heading">
 
-  </div>
-  <div id="body">
+      <span id="heading-text">Welcome to MyDiary API</span>
 
-    <span id="body-text">Please Access the documentation <a href="https://mydiary-api.apiary.io"> here</a></span>
+    </div>
+    <div id="body">
 
+      <span id="body-text">Please Access the documentation <a href="https://edwardk1mydiary.docs.apiary.io"> here</a></span>
+
+    </div>
   </div>
 
 </body>
